@@ -50,35 +50,34 @@ Command Syntax/Example :
 			spirentaion_object.get(end_point,params=user_params)
                 
 #### Demo of some of the features:
-'''python
-/examples/sample_spirentaion_rest_client_example.py:
+'''
+python /examples/sample_spirentaion_rest_client_example.py
 
 	This is sample script to print version, org_id application_id 
 	and current user checkouts
 
-Note update following variables in script for your environment:
-# 
-username = 'your username'
-password = 'your password'
-organization_id = 'org_id' <- This is optional, if not provided, rest_client will get the default spirent id 
+Note : update following variables in script for your environment:
+
+	username = 'your username',
+	password = 'your password',
+	organization_id = 'org_id' <- This is optional, if not provided, rest_client will get the default spirent id 
+
 '''
 
-Note: 
-
-You can get default spirent id 
+You can get default organization id 
 Python code:
 
-url = 'https://spirent.spirentaion.com/api/iam/organizations/default'
-session = requests.Session()
-response = session.get(url)
+	url = 'https://spirent.spirentaion.com/api/iam/organizations/default'
+	session = requests.Session()
+	response = session.get(url)
 
 
 ## Contact
 feel free to contact for any issue while using the spirentaion_rest_client
 
-poornima.wari@spirent.com
-
-temeva-support@spirent.com
+	poornima.wari@spirent.com
+	
+	temeva-support@spirent.com
 
 ## License
 [MIT]
