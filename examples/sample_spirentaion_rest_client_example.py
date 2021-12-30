@@ -8,7 +8,7 @@ from py_spirentaion_rest_client.SpirentAion import SpirentAion
 # user credentials
 aion_server = 'spirent.spirentaion.com'
 user = 'poornima.wari@spirent.com'
-password = 'Spirent2021'
+password = '***'
 
 # creating SpirentAion object
 spirentaion_object = SpirentAion(aion_server, user, password)
