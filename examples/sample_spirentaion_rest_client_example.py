@@ -4,14 +4,25 @@
 """
 
 from py_spirentaion_rest_client.SpirentAion import SpirentAion
+import json
 
-# user credentials
-aion_server = 'spirent.spirentaion.com'
-user = 'poornima.wari@spirent.com'
-password = 'Spirent2021'
+# get aion credentials from file aion_credentials.json
+# get Aion credentials :
+# read json file
+json_file = open('aion_credentials.json', 'r')
+
+# store data in json object
+json_object = json.load(json_file)
+
+# close the original file
+json_file.close()
+
+aion_server = json_object['AION']['aion_server']
+username = json_object['AION']['username']
+password = json_object['AION']['password']
 
 # creating SpirentAion object
-spirentaion_object = SpirentAion(aion_server, user, password)
+spirentaion_object = SpirentAion(aion_server, username, password)
 
 # get the license server version
 end_points = '/lic/version'
@@ -41,7 +52,7 @@ params = {
                     'view': 'current',
                     'organization_id': organization_id,
                     'application_id': stc_id,
-                    'user_id': user
+                    'user_id': username
           }
 
 end_points = '/lic/checkouts'

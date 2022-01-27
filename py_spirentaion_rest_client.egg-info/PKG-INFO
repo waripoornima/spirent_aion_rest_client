@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: py-spirentaion-rest-client
+Version: 0.1
+Summary: spirentaion_rest_client: Front end for Spirent AION license service ReST API
+Home-page: https://github.com/waripoornima/spirentaion_rest_client
+Author: PoornimaWari
+Author-email: poornima.wari@spirent.com
+License: http://www.opensource.org/licenses/mit-license.php
+Keywords: Spirent AION license Service ReST API
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Utilities
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+License-File: LICENSE
+
+See https://github.com/waripoornima/spirentaion_rest_client
+

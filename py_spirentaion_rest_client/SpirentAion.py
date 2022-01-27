@@ -1,28 +1,49 @@
 """
+
     Spirent Aion Rest client is front end for Spirent AION licensing server ReST API
+    Spirent AION is checkout based licencing, contained in cloud or on-prem cluster.
+    Its Multi tenant hosted site
     Supports 2.7 + to python 3+
+
 """
 
-__Version__ = '0.1'
+
+__Version__ = '0.2'
 __Author__ = 'Poornima Wari'
 
+
 from datetime import datetime  # we need it to create log file based on current time and date
+
+
+# python3 supports urllib.parse and python2 supports urlparse
+# we need this is to build the url
+try:
+    from urllib.parse import urlunsplit
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlunsplit
+    from urlparse import urlparse
+
 
 """
     Modification history 
     ====================
     0.1 : 12/27/2021
             - Initial code
+    0.2 : 01/27/2022
+            - Added SSLError exception
+              API will try http, in-case https fails
+              Note: http needs to be enabled on AION Cluster
 """
 
 
-import requests  # we need it for http session
-import json  # we need it to parse json data
-import logging  # we need it to create logger
-import platform  # we need it to print environment - python version
-import sys  # we need it to trace runtime error
-import os  # we need it to create log file
-import functools  # we need it to decorate the logs
+import requests      # we need it for http session
+import json          # we need it to parse json data
+import logging       # we need it to create logger
+import platform      # we need it to print environment - python version
+import sys           # we need it to trace runtime error
+import os            # we need it to create log file
+import functools     # we need it to decorate the logs
 
 
 # helper functions
@@ -38,8 +59,28 @@ def get_default_id(url):
         returns default organization id
     """
     url = '{}/api/iam/organizations/default'.format(url)
-    session = requests.Session()
-    response = session.get(url)
+
+    # Catch the SSLError and try for http
+    try:
+        session = requests.Session()
+        response = session.get(url)
+
+    except requests.exceptions.SSLError as error:
+        logging.warning('SSL Certificate verification failed')
+        logging.warning('We will try go get the token with http')
+
+        # parse the url
+        content = urlparse(url)
+
+        # build url with http scheme
+        url = urlunsplit(('http', content.netloc, content.path, content.params, content.query))
+
+        try:
+            response = session.get(url)
+        except Exception as error:
+            logging.critical('Looks like http is not enable on AION {} {}'.format(content.netloc, error))
+            raise
+
     if not response.ok:
         try:
             error_content = response.content
@@ -47,6 +88,7 @@ def get_default_id(url):
         except Exception as error_massage:
             logging.critical('Failed to get the organization id {} {}'.format(error_massage, error_content))
             raise requests.HTTPError(error_massage, error_content)
+
     return response.json()['id']
 
 
@@ -126,6 +168,7 @@ class SpirentAion:
 
     def __init__(self, server, username, password, organization_id='', log_level='INFO', log_path=None):
         """
+
             Mandatory arguments :
             username = spirentaion username
             password = spirentaion password
@@ -136,6 +179,7 @@ class SpirentAion:
                         if not passed the rest client will get one.
             log_level = uses INFO default
             log_path = if not provided creates log folder in abspath and add .log file with current date and time
+
         """
 
         self.username = username
@@ -143,7 +187,16 @@ class SpirentAion:
         self.log_level = log_level
         self.log_path = log_path
         self.organization_id = organization_id
-        self.__url = 'https://' + server
+
+        # remove extra / , if there is one
+        if server.endswith('/'):
+            server = server[:-1]
+
+        self.__url = server
+
+        # append https
+        if not server.startswith('http'):
+            self.__url = 'https://' + server
 
         # if log path is not defined create one at abspath
         if self.log_path:
@@ -224,8 +277,29 @@ class SpirentAion:
         self.__session = requests.Session()
 
         # authorizing the session
-        response = self.__session.post(path, headers=self.__header, data=self.__data)
+        # try with https and will go for http in-case of failure
+        try:
+            response = self.__session.post(path, headers=self.__header, data=self.__data)
 
+        except requests.exceptions.SSLError as error:
+            logger.warning('SSL Certificate verification failed')
+            logger.warning('We will try go get the token with http')
+
+            # parse the url
+            content = urlparse(path)
+
+            # build url with http scheme
+            path = urlunsplit(('http', content.netloc, content.path, content.params, content.query))
+            self.__url = urlunsplit(('http', content.netloc, '', '', ''))
+
+            try:
+                response = self.__session.post(path, headers=self.__header, data=self.__data)
+            except Exception as error:
+                logger.critical('Looks like http is not enable on AION {} {}'.format(content.netloc, error))
+                raise
+        except Exception as error:
+            logger.critical('Failed to authorize {}'.format(error))
+            raise
         # error handling in case of failure
         if not response.ok:
             try:
@@ -353,8 +427,8 @@ class SpirentAion:
 def main():
     # user credentials
     user = 'poornima.wari@spirent.com'
-    password = 'Spirent2021'
-    aion_server = 'spirent.spirentaion.com'
+    password = '***'
+    aion_server = 'sjc.spirentaion.com'
 
     # license server version end point
     end_points = '/lic/version'

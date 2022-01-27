@@ -1,6 +1,6 @@
 # spirentaion_rest_client
 
-SpirentAion is python ReST client for Spirent AION Service ReST API Supports HTTP-Verbs GET,POST,PUT and DELETE. 
+SpirentAion is python ReST client for Spirent AION license Service ReST API Supports HTTP-Verbs GET,POST,PUT and DELETE. 
 
 This ReST client supports python2.7+ and python3+
 
@@ -28,6 +28,7 @@ Command Syntax/Example :
 
 
 * List Users
+
 			
 			end_point = '/iam/users'
 			spirentaion_object.get(end_point)
@@ -35,19 +36,23 @@ Command Syntax/Example :
 
 * Get application Id
 
+
 			end_point = '/inv/products'
 			spirentaion_object.get(end_point)
 
+
 * License Checkout
+
 
 			end_point = '/lic/checkouts'
 			user_params = {
-  			'view'='current',
-			'orgnization_id' = 'org id provided by spirent',
-			'application_id' = 'your application id ex: stc',
-  			'user_iid' = 'your aion user id'
+				'view'='current',
+				'orgnization_id' = 'org id provided by spirent',
+				'application_id' = 'your application id ex: stc',
+				'user_iid' = 'your aion user id'
 			}
 			spirentaion_object.get(end_point,params=user_params)
+
                 
 #### Demo of some of the features:
 '''
@@ -56,7 +61,7 @@ python /examples/sample_spirentaion_rest_client_example.py
 	This is sample script to print version, org_id application_id 
 	and current user checkouts
 
-Note : update following variables in script for your environment:
+Note : update following variables in aion_credential.json for your environment:
 
 	username = 'your username',
 	password = 'your password',
@@ -70,7 +75,6 @@ Python code:
 	url = 'https://spirent.spirentaion.com/api/iam/organizations/default'
 	session = requests.Session()
 	response = session.get(url)
-
 
 ## Contact
 feel free to contact for any issue while using the spirentaion_rest_client
