@@ -6,7 +6,7 @@
 from py_spirentaion_rest_client.SpirentAion import SpirentAion
 import json
 
-<<<<<<< HEAD
+
 # get aion credentials from file aion_credentials.json
 # get Aion credentials :
 # read json file
@@ -21,12 +21,6 @@ json_file.close()
 aion_server = json_object['AION']['aion_server']
 username = json_object['AION']['username']
 password = json_object['AION']['password']
-=======
-# user credentials
-aion_server = 'spirent.spirentaion.com'
-user = 'poornima.wari@spirent.com'
-password = '***'
->>>>>>> feaeceabec15ec3468255203bed28802195e94ba
 
 # creating SpirentAion object
 spirentaion_object = SpirentAion(aion_server, username, password)
